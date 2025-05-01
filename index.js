@@ -82,7 +82,7 @@ app.get('/api/users/:_id/logs',function(req,res){
       })
     })
     findUserById(req.params._id,(err,data)=>{
-      return res.json({username:data[0].username, id:req.params._id, count:exercises.length, log:exercises})
+      return res.json({username:data[0].username, _id:req.params._id, count:exercises.length, log:exercises})
     })
     
   })
