@@ -35,7 +35,7 @@ app.get('/api/users',function(req,res){
     data.forEach(u=>{
       users.push(u)
     })
-    return res.json({users:users})
+    return res.send(users)
   })
   
 })
