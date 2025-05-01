@@ -68,6 +68,7 @@ app.post('/api/users/:_id/exercises',function(req,res){
 
 //get logs
 //add to and from
+//date
 app.get('/api/users/:_id/logs',function(req,res){
   
   let exercises =[] //array to be returned
