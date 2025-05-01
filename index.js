@@ -75,7 +75,11 @@ app.get('/api/users/:_id/logs',function(req,res){
   findExerciseByUserId(req.params._id,(err,data)=>{
     if(err) console.log('err')
     data.forEach(d=>{
-      exercises.push(d)
+      exercises.push({
+        description: d.description,
+        duration:d.duration,
+        date: new Date(d.date).toDateString()
+      })
     })
     findUserById(req.params._id,(err,data)=>{
       return res.json({username:data[0].username, id:req.params._id, count:exercises.length, log:exercises})

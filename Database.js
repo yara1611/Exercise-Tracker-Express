@@ -68,7 +68,7 @@ var createAndSaveExercise = function(userId,description,duration,date,done){
     username:data[0].username,
     description:description,
     duration:duration,
-    date:new Date(date).toDateString(),
+    date:date,
     userId:userId})
     exercise.save(function(err, data) {
     if (err) return console.error(err);
@@ -85,7 +85,7 @@ var findExerciseByUserId = function(userId, done){
   Exercise.find({userId:userId}).select({description:1,duration:1,date:1,_id:0}).exec((err,data)=>{
     if(err) console.log('error')
     if(data==null) console.log('not found')
-    console.log(new Date(data[1].date).toDateString())
+   
     done(null,data)
   })
 }
