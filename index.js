@@ -3,7 +3,7 @@ const app = express()
 const cors = require('cors')
 require('dotenv').config()
 const bodyParser = require('body-parser')
-const {createAndSaveUser, findAllUsers, createAndSaveExercise, findUserById} = require('./Database.js')
+const {createAndSaveUser, findAllUsers, findUserById, createAndSaveExercise, findExerciseByUserId} = require('./Database.js')
 
 app.use(bodyParser.urlencoded({ extended: true }))
 
@@ -69,8 +69,19 @@ app.post('/api/users/:_id/exercises',function(req,res){
 //get logs
 //add to and from
 app.get('/api/users/:_id/logs',function(req,res){
-  let users =[] //array to be returned
-  return res.json({logs:'logs', id:req.params._id, count:'count of exercises', exercises:[]})
+  
+  let exercises =[] //array to be returned
+  findExerciseByUserId(req.params._id,(err,data)=>{
+    if(err) console.log('err')
+    data.forEach(d=>{
+      exercises.push(d)
+    })
+    findUserById(req.params._id,(err,data)=>{
+      return res.json({username:data[0].username, id:req.params._id, count:exercises.length, log:exercises})
+    })
+    
+  })
+  
 })
 
 const listener = app.listen(process.env.PORT || 3000, () => {

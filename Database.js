@@ -39,6 +39,7 @@ var createAndSaveUser =function(username, done){
   });
 }
 
+//user modules
 var findUserById = function(userId, done) {
   User.find({_id:userId}, function (err, data) {
     if (err) return console.log(err);
@@ -55,7 +56,6 @@ var findAllUsers = function(done){
 }
 
 //exercise modules
-
 var createAndSaveExercise = function(userId,description,duration,date,done){
    console.log('Received userId:', userId);
   findUserById(userId,function(err,data){
@@ -80,9 +80,21 @@ var createAndSaveExercise = function(userId,description,duration,date,done){
   
 }
 
+//find without the Ids
+var findExerciseByUserId = function(userId, done){
+  Exercise.find({userId:userId}).select({description:1,duration:1,date:1,_id:0}).exec((err,data)=>{
+    if(err) console.log('error')
+    if(data==null) console.log('not found')
+    done(null,data)
+  })
+}
+//log modules 
+
+
 module.exports ={
   createAndSaveUser,
   findUserById,
   findAllUsers,
   createAndSaveExercise,
+  findExerciseByUserId,
 }
