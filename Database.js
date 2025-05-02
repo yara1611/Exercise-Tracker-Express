@@ -64,12 +64,16 @@ var createAndSaveExercise = function(userId,description,duration,date,done){
       console.log('User not found');
       return done(new Error('User not found'));
     }
-    let exercise = new Exercise({
-    username:data[0].username,
-    description:description,
-    duration:duration,
-    date:new Date(date),
-    userId:userId})
+    let parsedDate = date ? new Date(date) : new Date();
+    if (isNaN(parsedDate.getTime())) return done(new Error('Invalid date format'));
+
+    const exercise = new Exercise({
+      username: data[0].username,
+      description,
+      duration,
+      date: parsedDate,
+      userId
+    });
     exercise.save(function(err, data) {
     if (err) return console.error(err);
     done(null, data)
