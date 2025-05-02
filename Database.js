@@ -7,7 +7,7 @@ const exerciseSchema = new mongoose.Schema({
   username:String,
   description:String,
   duration:Number,
-  date:String,
+  date:Date,
   userId: String
 })
 const Exercise = mongoose.model('Exercise',exerciseSchema)
@@ -68,7 +68,7 @@ var createAndSaveExercise = function(userId,description,duration,date,done){
     username:data[0].username,
     description:description,
     duration:duration,
-    date:date,
+    date:new Date(date),
     userId:userId})
     exercise.save(function(err, data) {
     if (err) return console.error(err);
@@ -81,11 +81,16 @@ var createAndSaveExercise = function(userId,description,duration,date,done){
 }
 
 //find without the Ids
-var findExerciseByUserId = function(userId, done){
-  Exercise.find({userId:userId}).select({description:1,duration:1,date:1,_id:0}).exec((err,data)=>{
+var findExerciseByUserId = function(userId,from,to,limit, done){
+  var result= Exercise.find({userId:userId}).select({description:1,duration:1,date:1,_id:0})
+  
+  if(limit) result=result.limit(Number(limit))
+  if(!from) from = 0
+  if (!to) to = new Date() 
+  console.log(new Date(from))
+  result.where('date').gte(new Date(from)).lte(new Date(to)).exec((err,data)=>{
     if(err) console.log('error')
     if(data==null) console.log('not found')
-   
     done(null,data)
   })
 }
