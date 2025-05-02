@@ -3,7 +3,7 @@ const app = express()
 const cors = require('cors')
 require('dotenv').config()
 const bodyParser = require('body-parser')
-const {createAndSaveUser, findAllUsers, createAndSaveExercise, findUserById} = require('./Database.js')
+const {createAndSaveUser, findAllUsers, findUserById, createAndSaveExercise, findExerciseByUserId} = require('./Database.js')
 
 app.use(bodyParser.urlencoded({ extended: true }))
 
@@ -35,7 +35,7 @@ app.get('/api/users',function(req,res){
     data.forEach(u=>{
       users.push(u)
     })
-    return res.json({users:users})
+    return res.send(users)
   })
   
 })
@@ -68,11 +68,30 @@ app.post('/api/users/:_id/exercises',function(req,res){
 
 //get logs
 //add to and from
+//date
 app.get('/api/users/:_id/logs',function(req,res){
-  let users =[] //array to be returned
-  return res.json({logs:'logs', id:req.params._id, count:'count of exercises', exercises:[]})
+  
+  let exercises =[] //array to be returned
+  const { from, to, limit } = req.query;
+  //console.log('from: '+from+' to: '+to+' limit: '+limit)
+  
+ findExerciseByUserId(req.params._id,from,to,limit,(err,data)=>{
+    if(err) console.log('err')
+    
+    data.forEach(d=>{
+        exercises.push({
+        description: d.description,
+        duration:d.duration,
+        date: new Date(d.date).toDateString()
+      })
+    })
+   
+    findUserById(req.params._id,(err,data)=>{
+      return res.json({username:data[0].username, _id:req.params._id, count:exercises.length, log:exercises})
+    })
 })
-
+})
+        
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('Your app is listening on port ' + listener.address().port)
 })
