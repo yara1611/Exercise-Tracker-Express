@@ -85,10 +85,13 @@ var findExerciseByUserId = function(userId,from,to,limit, done){
   var result= Exercise.find({userId:userId}).select({description:1,duration:1,date:1,_id:0})
   
   if(limit) result=result.limit(Number(limit))
-  if(!from) from = 0
-  if (!to) to = new Date() 
-  console.log(new Date(from))
-  result.where('date').gte(new Date(from)).lte(new Date(to)).exec((err,data)=>{
+   if (from) {
+    result = result.where('date').gte(new Date(from));
+  }
+  if (to) {
+    result = result.where('date').lte(new Date(to));
+  }
+  result.exec((err,data)=>{
     if(err) console.log('error')
     if(data==null) console.log('not found')
     done(null,data)
