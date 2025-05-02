@@ -82,7 +82,7 @@ app.get('/api/users/:_id/logs',function(req,res){
         exercises.push({
         description: d.description,
         duration:d.duration,
-        date: d.date.toDateString()
+        date: new Date(d.date).toDateString()
       })
     })
    
